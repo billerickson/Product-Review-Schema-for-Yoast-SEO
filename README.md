@@ -1,6 +1,6 @@
 # Product Review Schema for Yoast SEO
 
-Yoast SEO uses the `Article` schema type for all posts. This plugin adds a "Product Review" box below the content editor for marking this as a review, and specifying the review information (product name, rating, summary...).
+Yoast SEO uses the `Article` schema type for all posts. This plugin adds a "Product Review" metabox for marking this as a review and specifying the review information (product name, rating, summary...).
 
 For more information, see: https://www.billerickson.net/product-review-schema-for-yoast-seo/
 
