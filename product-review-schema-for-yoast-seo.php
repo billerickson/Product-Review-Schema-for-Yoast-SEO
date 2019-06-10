@@ -97,7 +97,7 @@ class BE_Product_Review_Schema {
 					echo '<input type="text"' . $this->field_id_name( $field ) . ' class="widefat" value="' . esc_html( $current ) . '" />';
 					break;
 				case 'textarea':
-					echo '<textarea' . $this->field_id_name( $field ) . ' rows="5">' . esc_html( $current ) . '</textarea>';
+					echo '<textarea' . $this->field_id_name( $field ) . ' rows="5" cols="60">' . esc_html( $current ) . '</textarea>';
 					break;
 				case 'number':
 					echo '<input type="number" min="1" max="5"' . $this->field_id_name( $field ) . ' class="widefat" value="' . esc_attr( $current ) . '" />';
