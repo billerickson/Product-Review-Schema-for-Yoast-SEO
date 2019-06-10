@@ -37,9 +37,9 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 	}
 
 	/**
-	 * Adds our Team Member's Person piece of the graph.
+	 * Adds our Review piece of the graph.
 	 *
-	 * @return array $graph Person Schema markup
+	 * @return array $graph Review markup
 	 */
 	public function generate() {
 		$post          = get_post( $this->context->id );
