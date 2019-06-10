@@ -45,22 +45,6 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 		$post          = get_post( $this->context->id );
 		$comment_count = get_comment_count( $this->context->id );
 
-		$name = get_post_meta( $this->context->id, 'be_product_review_name', true );
-		if( empty( $name ) )
-			$name = get_the_title();
-
-		$rating = get_post_meta( $this->context->id, 'be_product_review_rating', true );
-		if( ! is_numeric( $rating ) )
-			$rating = 1;
-
-		$summary = get_post_meta( $this->context->id, 'be_product_review_summary', true );
-		if( empty( $summary ) )
-			$summary = get_the_excerpt( $post );
-
-		$body = get_post_meta( $this->context->id, 'be_product_review_body', true );
-		if( empty( $body ) )
-			$body = $post->post_content;
-
 		$data          = array(
 			'@type'            => 'Review',
 			'@id'              => $this->context->canonical . '#product-review',
@@ -70,15 +54,15 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 					'image'    => array(
 						'@id'  => $this->context->canonical . WPSEO_Schema_IDs::PRIMARY_IMAGE_HASH,
 					),
-					'name'     => 'Product Name',
+					'name'     => wp_strip_all_tags( $this->get_review_meta( 'name', get_the_title() ) ),
 			),
 			'reviewRating'     => array(
 				'@type'        => 'Rating',
-				'ratingValue'  => esc_attr( $rating ),
+				'ratingValue'  => esc_attr( $this->get_review_meta( 'rating', 1 ) ),
 			),
-			'name'         => wp_strip_all_tags( $name ),
-			'description' => wp_strip_all_tags( $summary ),
-			'reviewBody'  => wp_kses_post( $body ),
+			'name'         => wp_strip_all_tags( $this->get_review_meta( 'name', get_the_title() ) ),
+			'description' => wp_strip_all_tags( $this->get_review_meta( 'summary', get_the_excerpt( $post ) ) ),
+			'reviewBody'  => wp_kses_post( $this->get_review_meta( 'body', $post->post_content ) ),
 			'author'           => array(
 				'@id'  => get_author_posts_url( get_the_author_meta( 'ID' ) ),
 				'name' => get_the_author_meta( 'display_name', $post->post_author ),
@@ -105,5 +89,19 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 		}
 
 		return $this->context->site_url . WPSEO_Schema_IDs::ORGANIZATION_HASH;
+	}
+
+	/**
+	 * Product review meta
+	 *
+	 * @param string $key
+	 * @param string $fallback
+	 * @return string $meta
+	 */
+	private function get_review_meta( $key = false, $fallback = false ) {
+		$meta = get_post_meta( $this->context->id, 'be_product_review_' . $key, true );
+		if( empty( $meta ) && !empty( $fallback ) )
+			$meta = $fallback;
+		return $meta;
 	}
 }
