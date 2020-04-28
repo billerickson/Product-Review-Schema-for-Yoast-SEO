@@ -1,24 +1,15 @@
 <?php
-/**
- * Class BE_Review
- */
-class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Piece {
+use \Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
+use \Yoast\WP\SEO\Generators\Schema\Article;
+use \Yoast\WP\SEO\Config\Schema_IDs;
+
+class BE_Product_Review extends Article {
 	/**
 	 * A value object with context variables.
 	 *
 	 * @var WPSEO_Schema_Context
 	 */
-	private $context;
-
-	/**
-	 * Product_Rating constructor.
-	 *
-	 * @param WPSEO_Schema_Context $context Value object with context variables.
-	 */
-	public function __construct( WPSEO_Schema_Context $context ) {
-		parent::__construct( $context );
-		$this->context   = $context;
-	}
+	public $context;
 
 	/**
 	 * Determines whether or not a piece should be added to the graph.
@@ -48,11 +39,11 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 		$data          = array(
 			'@type'            => 'Review',
 			'@id'              => $this->context->canonical . '#product-review',
-			'isPartOf'         => array( '@id' => $this->context->canonical . WPSEO_Schema_IDs::ARTICLE_HASH ),
+			'isPartOf'         => array( '@id' => $this->context->canonical . Schema_IDs::ARTICLE_HASH ),
 			'itemReviewed'     => array(
 					'@type'    => 'Product',
 					'image'    => array(
-						'@id'  => $this->context->canonical . WPSEO_Schema_IDs::PRIMARY_IMAGE_HASH,
+						'@id'  => $this->context->canonical . Schema_IDs::PRIMARY_IMAGE_HASH,
 					),
 					'name'     => wp_strip_all_tags( $this->get_review_meta( 'name', get_the_title() ) ),
 					'aggregateRating' => array(
@@ -76,7 +67,7 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 			'datePublished'    => mysql2date( DATE_W3C, $post->post_date_gmt, false ),
 			'dateModified'     => mysql2date( DATE_W3C, $post->post_modified_gmt, false ),
 			'commentCount'     => $comment_count['approved'],
-			'mainEntityOfPage' => $this->context->canonical . WPSEO_Schema_IDs::WEBPAGE_HASH,
+			'mainEntityOfPage' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH,
 		);
 		$data = apply_filters( 'be_review_schema_data', $data, $this->context );
 
@@ -90,10 +81,10 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 	 */
 	private function get_publisher_url() {
 		if ( $this->context->site_represents === 'person' ) {
-			return $this->context->site_url . WPSEO_Schema_IDs::PERSON_HASH;
+			return $this->context->site_url . Schema_IDs::PERSON_HASH;
 		}
 
-		return $this->context->site_url . WPSEO_Schema_IDs::ORGANIZATION_HASH;
+		return $this->context->site_url . Schema_IDs::ORGANIZATION_HASH;
 	}
 
 	/**
