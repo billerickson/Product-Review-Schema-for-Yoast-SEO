@@ -55,6 +55,11 @@ class BE_Product_Review extends \WPSEO_Schema_Article implements \WPSEO_Graph_Pi
 						'@id'  => $this->context->canonical . WPSEO_Schema_IDs::PRIMARY_IMAGE_HASH,
 					),
 					'name'     => wp_strip_all_tags( $this->get_review_meta( 'name', get_the_title() ) ),
+					'aggregateRating' => array(
+						'@type' => 'AggregateRating',
+						'ratingValue'  => esc_attr( $this->get_review_meta( 'rating', 1 ) ),
+						'reviewCount' => 1
+					)
 			),
 			'reviewRating'     => array(
 				'@type'        => 'Rating',
